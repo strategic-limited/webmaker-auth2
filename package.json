@@ -1,0 +1,66 @@
+{
+  "name": "webmaker-auth",
+  "description": "Express middleware for proxying authentication requests to a webmaker login server",
+  "version": "1.0.4",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mozilla/webmaker-auth.git"
+  },
+  "author": {
+    "name": "Webmaker Product Team",
+    "email": "webmaker-staff@mozillafoundation.org"
+  },
+  "license": "MPLv2",
+  "dependencies": {
+    "express": "3.4.5",
+    "hyperquest": "~0.2.0"
+  },
+  "devDependencies": {
+    "grunt": "0.4.2",
+    "grunt-contrib-jshint": "0.7.2",
+    "grunt-jsbeautifier": "0.2.6"
+  },
+  "gitHead": "c119d000363df9fdd0d24442fadd870e93c1f266",
+  "bugs": {
+    "url": "https://github.com/mozilla/webmaker-auth/issues"
+  },
+  "homepage": "https://github.com/mozilla/webmaker-auth",
+  "_id": "webmaker-auth@1.0.4",
+  "_shasum": "0464e6224cdeda1ced5d323b46cc5e535c3ab42f",
+  "_from": "webmaker-auth@^1.0.2",
+  "_npmVersion": "2.7.0",
+  "_nodeVersion": "0.12.4",
+  "_npmUser": {
+    "name": "cadecairos",
+    "email": "chris@chrisdecairos.ca"
+  },
+  "maintainers": [
+    {
+      "name": "cadecairos",
+      "email": "chris@chrisdecairos.ca"
+    },
+    {
+      "name": "jbuck",
+      "email": "jon@jbuckley.ca"
+    },
+    {
+      "name": "k88hudson",
+      "email": "k88hudson@gmail.com"
+    },
+    {
+      "name": "pomax",
+      "email": "pomax@nihongoresources.com"
+    }
+  ],
+  "dist": {
+    "shasum": "0464e6224cdeda1ced5d323b46cc5e535c3ab42f",
+    "tarball": "http://registry.npmjs.org/webmaker-auth/-/webmaker-auth-1.0.4.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/webmaker-auth/-/webmaker-auth-1.0.4.tgz",
+  "readme": "ERROR: No README data found!"
+}
