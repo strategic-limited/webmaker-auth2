@@ -367,9 +367,9 @@ module.exports = function (options) {
         });
       }
 
-      if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
+      //if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
         return refreshSession(req, res, next);
-      }
+      //}
 
       res.json({
         status: 'Valid Session',
