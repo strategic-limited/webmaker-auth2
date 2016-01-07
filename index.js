@@ -372,7 +372,7 @@ module.exports = function (options) {
       //}
 
       res.json({
-        status: 'Valid Session',
+        status: 'Valid Session get details',
         user: req.session.user,
         email: req.session.email
       });
