@@ -33,5 +33,5 @@ module.exports = function (grunt) {
   // Validate code (read only)
   grunt.registerTask('validate', ['jsbeautifier:validate', 'jshint']);
 
-  grunt.registerTask('default', ['jsbeautifier:validate', 'jshint']);
+  grunt.registerTask('default', ['jshint']);
 };
