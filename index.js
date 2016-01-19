@@ -374,7 +374,8 @@ module.exports = function (options) {
         });
       }
 
-      if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
+      //if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
+      if (req.session.user.roles.length <= 0) {
         return refreshSession(req, res, next);
       }
       
