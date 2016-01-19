@@ -105,7 +105,7 @@ module.exports = function (options) {
     }
   }
 
-  function refreshSession(req, res, next) {
+  /*function refreshSession(req, res, next) {
     var hReq = hyperquest.get({
       uri: self.authLoginURL + '/user/id/' + req.session.user.id
     });
@@ -135,7 +135,7 @@ module.exports = function (options) {
         authenticateCallback(null, req, res, json);
       });
     });
-  }
+  } */
 
   function getIPAddress(req) {
     // account for load balancer!
@@ -360,7 +360,7 @@ module.exports = function (options) {
       }), 'utf8');
 
     },
-    verify: function (req, res, next) {
+    verify: function (req, res) {
       if (!req.session.email && !req.session.user) {
         return res.json({
           status: 'No Sessions'
@@ -380,6 +380,7 @@ module.exports = function (options) {
         user: req.session.user,
         email: req.session.email
       });
+
     },
     createUser: function (req, res, next) {
       var hReq = hyperquest.post({
