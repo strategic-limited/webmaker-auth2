@@ -7,8 +7,8 @@ module.exports = function (options) {
 
   var self = this;
 
-  var ONE_YEAR = 31536000000;
-
+  //var ONE_YEAR = 31536000000;
+  var ONE_WEEK = 60 * 60 * 24 * 7;
   // missing session secret
   if (!options.secretKey) {
     throw new Error('(webmaker-auth): secretKey was not passed into webmaker-auth');
@@ -87,7 +87,7 @@ module.exports = function (options) {
     }
     if (json.user) {
       if (req.body.validFor === 'one-year') {
-        req.session.cookie.maxAge = ONE_YEAR;
+        req.session.cookie.maxAge = ONE_WEEK;
       }
 
       req.session.user = json.user;
@@ -363,14 +363,18 @@ module.exports = function (options) {
     verify: function (req, res, next) {
       if (!req.session.email && !req.session.user) {
         return res.json({
-          status: 'No Session'
+          status: 'No Sessions'
         });
       }
 
       //if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
-        return refreshSession(req, res, next);
+      //  return refreshSession(req, res, next);
       //}
-
+      var temprole = [];
+      req.session.user.roles.forEach(function(role){
+        temprole.push(role.name);
+      });
+      req.session.user.roles = temprole;
       res.json({
         status: 'Valid Session get details',
         user: req.session.user,
@@ -430,6 +434,7 @@ module.exports = function (options) {
           req.session.user = json.user;
           req.session.email = json.email;
           res.json({
+            test: 'ewan',
             user: json.user,
             email: json.email
           });
