@@ -1,0 +1,28 @@
+{
+  "globals": {
+    "module": true,
+    "define": true,
+    "requirejs": true,
+    "require": true,
+    "console": true,
+    "Popcorn": true,
+    "Buffer": true,
+    "ga": true
+  },	
+  "browser": true,
+  "curly": true,
+  "eqeqeq": true,
+  "es5": false,
+  "forin": true,
+  "latedef": true,
+  "newcap": true,
+  "node": true,
+  "noempty": true,
+  "nonew": true,
+  "quotmark": false,
+  "trailing": true,
+  "undef": true,
+  "unused": true,
+  "expr": true
+
+}

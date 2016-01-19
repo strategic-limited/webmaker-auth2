@@ -376,7 +376,7 @@ module.exports = function (options) {
       });
       req.session.user.roles = temprole;
       res.json({
-        status: 'Valid Session get details',
+        status: 'Valid Session user get details',
         user: req.session.user,
         email: req.session.email
       });
