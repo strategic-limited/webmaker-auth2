@@ -7,8 +7,8 @@ module.exports = function (options) {
 
   var self = this;
 
-  //var ONE_YEAR = 31536000000;
-  var ONE_WEEK = 60 * 60 * 24 * 7;
+  var ONE_YEAR = 60 * 60 * 24 * 7;// 31536000000;
+  
   // missing session secret
   if (!options.secretKey) {
     throw new Error('(webmaker-auth): secretKey was not passed into webmaker-auth');
@@ -87,7 +87,7 @@ module.exports = function (options) {
     }
     if (json.user) {
       if (req.body.validFor === 'one-year') {
-        req.session.cookie.maxAge = ONE_WEEK;
+        req.session.cookie.maxAge = ONE_YEAR;
       }
 
       req.session.user = json.user;
@@ -105,7 +105,7 @@ module.exports = function (options) {
     }
   }
 
-  /*function refreshSession(req, res, next) {
+  function refreshSession(req, res, next) {
     var hReq = hyperquest.get({
       uri: self.authLoginURL + '/user/id/' + req.session.user.id
     });
@@ -131,11 +131,18 @@ module.exports = function (options) {
         } catch (ex) {
           return authenticateCallback(ex, req, res);
         }
+        var temprole = [];
+        json.user.roles.forEach(function(role){
+          temprole.push(role.name);
+        });
+        if (temprole.length > 0) {
+          json.user.roles = temprole;
+        }
         json.email = json.user.email;
         authenticateCallback(null, req, res, json);
       });
     });
-  } */
+  }
 
   function getIPAddress(req) {
     // account for load balancer!
@@ -360,21 +367,28 @@ module.exports = function (options) {
       }), 'utf8');
 
     },
-    verify: function (req, res) {
+    verify: function (req, res, next) {
       if (!req.session.email && !req.session.user) {
         return res.json({
           status: 'No Sessions'
         });
       }
 
-      //if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
-      //  return refreshSession(req, res, next);
-      //}
+      if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
+        return refreshSession(req, res, next);
+      }
+      
       var temprole = [];
       req.session.user.roles.forEach(function(role){
-        temprole.push(role.name);
+        if(role.name) {
+          temprole.push(role.name);
+        } else {
+          temprole.push(role);
+        }
       });
-      req.session.user.roles = temprole;
+      if (temprole.length > 0) {
+        req.session.user.roles = temprole;
+      }
       res.json({
         status: 'Valid Session user get details',
         user: req.session.user,
