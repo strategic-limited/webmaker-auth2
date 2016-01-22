@@ -133,11 +133,18 @@ module.exports = function (options) {
         }
         var temprole = [];
         json.user.roles.forEach(function(role){
-          temprole.push(role.name);
+          if (role) {
+            if (role.hasOwnProperty("name")) {
+              temprole.push(role.name);
+            } else {
+              if (role) { temprole.push(role); }
+            }
+          }
         });
         if (temprole.length > 0) {
           json.user.roles = temprole;
         }
+
         json.email = json.user.email;
         authenticateCallback(null, req, res, json);
       });
@@ -381,15 +388,18 @@ module.exports = function (options) {
       
       var temprole = [];
       req.session.user.roles.forEach(function(role){
-        if(role.name) {
-          temprole.push(role.name);
-        } else {
-          temprole.push(role);
+        if (role) {
+          if (role.hasOwnProperty("name")) {
+            temprole.push(role.name);
+          } else {
+            if (role) { temprole.push(role); }
+          }
         }
       });
       if (temprole.length > 0) {
         req.session.user.roles = temprole;
       }
+
       res.json({
         status: 'Valid Session user get details',
         user: req.session.user,
@@ -450,7 +460,6 @@ module.exports = function (options) {
           req.session.user = json.user;
           req.session.email = json.email;
           res.json({
-            test: 'ewan',
             user: json.user,
             email: json.email
           });
