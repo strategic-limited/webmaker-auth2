@@ -8,7 +8,7 @@ module.exports = function (options) {
   var self = this;
 
   var ONE_YEAR = 60 * 60 * 24 * 7;// 31536000000;
-  
+
   // missing session secret
   if (!options.secretKey) {
     throw new Error('(webmaker-auth): secretKey was not passed into webmaker-auth');
@@ -57,13 +57,39 @@ module.exports = function (options) {
 
     var cookieSessionMiddleware = express.cookieSession(options);
 
+    var whitelabelSessionsCache = {};
+
+    var copyOptionsWithDomain = function (options, cookieDomain) {
+
+      var result = {
+        key: options.key,
+        secret: options.secret,
+        cookie: options.cookie,
+        proxy: options.proxy
+      };
+
+      result.cookie.domain = cookieDomain;
+
+      return result;
+    };
+
     // This is a work-around for cross-origin OPTIONS requests
     // See https://github.com/senchalabs/connect/issues/323
     return function (req, res, next) {
       if (req.method.toLowerCase() === 'options') {
         return next();
       } else {
-        cookieSessionMiddleware(req, res, next);
+        // we allow req.whitelabel to override cookieDomain
+        var cookieDomain = req.whitelabel && req.whitelabel.cookieDomain;
+        if (cookieDomain) {
+          var hostSession = whitelabelSessionsCache[cookieDomain];
+          if (!hostSession) {
+            hostSession = whitelabelSessionsCache[cookieDomain] = express.session(copyOptionsWithDomain(options, cookieDomain));
+          }
+          hostSession(req, res, next);
+        } else {
+          cookieSessionMiddleware(req, res, next);
+        }
       }
     };
 
@@ -385,7 +411,7 @@ module.exports = function (options) {
       if (req.session.user.roles.length <= 0) {
         return refreshSession(req, res, next);
       }
-      
+
       var temprole = [];
       req.session.user.roles.forEach(function(role){
         if (role) {
