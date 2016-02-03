@@ -36,9 +36,19 @@ module.exports = function (options) {
   self.domain = options.domain;
   self.cookieName = 'webmakerlogin';
 
+  self.getLoginUrl = function getLoginUrl(req) {
+    return req.whitelabel ? req.whitelabel.getLoginUrl() : self.authLoginURL;
+  };
+
+  self.getAuthLoginUrl = function getAuthLoginUrl(req) {
+    return req.whitelabel ? req.whitelabel.getLoginUrlWithAuth() : self.loginURL;
+  };
+
   self.cookieParser = function () {
     return express.cookieParser();
   };
+
+  self.extractWhitelabel = require('./lib/extract-whitelabel')(self);
 
   self.cookieSession = function () {
     var options = {
@@ -84,7 +94,7 @@ module.exports = function (options) {
         if (cookieDomain) {
           var hostSession = whitelabelSessionsCache[cookieDomain];
           if (!hostSession) {
-            hostSession = whitelabelSessionsCache[cookieDomain] = express.session(copyOptionsWithDomain(options, cookieDomain));
+            hostSession = whitelabelSessionsCache[cookieDomain] = express.cookieSession(copyOptionsWithDomain(options, cookieDomain));
           }
           hostSession(req, res, next);
         } else {
@@ -133,7 +143,7 @@ module.exports = function (options) {
 
   function refreshSession(req, res, next) {
     var hReq = hyperquest.get({
-      uri: self.authLoginURL + '/user/id/' + req.session.user.id
+      uri: self.getAuthLoginUrl(req) + '/user/id/' + req.session.user.id
     });
     hReq.on('error', next);
     hReq.on('response', function (resp) {
@@ -188,6 +198,7 @@ module.exports = function (options) {
 
   self.handlers = options.testMode ? require('./testmode')(options) : {
     request: function (req, res, next) {
+
       if (!req.body.uid) {
         return res.json(400, {
           error: 'missing email or username'
@@ -203,7 +214,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.authLoginURL + '/api/v2/user/request'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/request'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -261,7 +272,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.authLoginURL + '/api/v2/user/authenticateToken'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/authenticateToken'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -311,7 +322,7 @@ module.exports = function (options) {
         headers: {
           'Content-Type': 'application/json'
         },
-        uri: self.loginURL + '/api/user/authenticate'
+        uri: self.getLoginUrl(req) + '/api/user/authenticate'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -356,7 +367,7 @@ module.exports = function (options) {
         headers: {
           'Content-Type': 'application/json'
         },
-        uri: self.authLoginURL + '/api/v2/user/exists'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/exists'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -439,7 +450,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.loginURL + '/api/v2/user/create'
+        uri: getLoginUrl(req) + '/api/v2/user/create'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -513,7 +524,7 @@ module.exports = function (options) {
         headers: {
           'Content-Type': 'application/json'
         },
-        uri: self.authLoginURL + '/api/v2/user/tos'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/tos'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -544,7 +555,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.authLoginURL + '/api/v2/user/verify-password'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/verify-password'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -601,7 +612,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.authLoginURL + '/api/v2/user/request-reset-code'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/request-reset-code'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -658,7 +669,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.authLoginURL + '/api/v2/user/reset-password'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/reset-password'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -718,7 +729,7 @@ module.exports = function (options) {
         headers: {
           'Content-Type': 'application/json'
         },
-        uri: self.authLoginURL + '/api/v2/user/remove-password'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/remove-password'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -771,7 +782,7 @@ module.exports = function (options) {
         headers: {
           'Content-Type': 'application/json'
         },
-        uri: self.authLoginURL + '/api/v2/user/enable-passwords'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/enable-passwords'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
