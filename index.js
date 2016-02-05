@@ -71,13 +71,7 @@ module.exports = function (options) {
 
     var copyOptionsWithDomain = function (options, cookieDomain) {
 
-      var result = {
-        key: options.key,
-        secret: options.secret,
-        cookie: options.cookie,
-        proxy: options.proxy
-      };
-
+      var result = JSON.parse(JSON.stringify(options));
       result.cookie.domain = cookieDomain;
 
       return result;
