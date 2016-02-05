@@ -37,11 +37,11 @@ module.exports = function (options) {
   self.cookieName = 'webmakerlogin';
 
   self.getLoginUrl = function getLoginUrl(req) {
-    return req.whitelabel ? req.whitelabel.getLoginUrl() : self.authLoginURL;
+    return req.whitelabel ? req.whitelabel.getLoginUrl() : self.loginURL;
   };
 
   self.getAuthLoginUrl = function getAuthLoginUrl(req) {
-    return req.whitelabel ? req.whitelabel.getLoginUrlWithAuth() : self.loginURL;
+    return req.whitelabel ? req.whitelabel.getLoginUrlWithAuth() : self.authLoginURL;
   };
 
   self.cookieParser = function () {
@@ -71,13 +71,7 @@ module.exports = function (options) {
 
     var copyOptionsWithDomain = function (options, cookieDomain) {
 
-      var result = {
-        key: options.key,
-        secret: options.secret,
-        cookie: options.cookie,
-        proxy: options.proxy
-      };
-
+      var result = JSON.parse(JSON.stringify(options));
       result.cookie.domain = cookieDomain;
 
       return result;
