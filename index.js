@@ -412,8 +412,7 @@ module.exports = function (options) {
         });
       }
 
-      //if (self.authLoginURL && (!req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
-      if (req.session.user.roles.length <= 0) {
+      if (self.authLoginURL && (req.session.user.roles.length <= 0 || !req.session.refreshAfter || req.session.refreshAfter < Date.now())) {
         return refreshSession(req, res, next);
       }
 
@@ -444,7 +443,7 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: getLoginUrl(req) + '/api/v2/user/create'
+        uri: self.getLoginUrl(req) + '/api/v2/user/create'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
