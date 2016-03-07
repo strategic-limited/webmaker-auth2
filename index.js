@@ -135,6 +135,15 @@ module.exports = function (options) {
     }
   }
 
+  function simplifyRoles(roles) {
+    return roles.map(function(role) {
+      if (role.name)
+        return role.name;
+      else
+        return role;
+    });
+  }
+
   function refreshSession(req, res, next) {
     var hReq = hyperquest.get({
       uri: self.getAuthLoginUrl(req) + '/user/id/' + req.session.user.id
@@ -161,19 +170,8 @@ module.exports = function (options) {
         } catch (ex) {
           return authenticateCallback(ex, req, res);
         }
-        var temprole = [];
-        json.user.roles.forEach(function(role){
-          if (role) {
-            if (role.hasOwnProperty("name")) {
-              temprole.push(role.name);
-            } else {
-              if (role) { temprole.push(role); }
-            }
-          }
-        });
-        if (temprole.length > 0) {
-          json.user.roles = temprole;
-        }
+
+        json.user.roles = simplifyRoles(json.user.roles);
 
         json.email = json.user.email;
         authenticateCallback(null, req, res, json);
@@ -416,19 +414,7 @@ module.exports = function (options) {
         return refreshSession(req, res, next);
       }
 
-      var temprole = [];
-      req.session.user.roles.forEach(function(role){
-        if (role) {
-          if (role.hasOwnProperty("name")) {
-            temprole.push(role.name);
-          } else {
-            if (role) { temprole.push(role); }
-          }
-        }
-      });
-      if (temprole.length > 0) {
-        req.session.user.roles = temprole;
-      }
+      req.session.user.roles = simplifyRoles(req.session.user.roles);
 
       res.json({
         status: 'Valid Session user get details',
