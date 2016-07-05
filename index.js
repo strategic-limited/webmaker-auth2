@@ -7,7 +7,8 @@ module.exports = function (options) {
 
   var self = this;
 
-  var ONE_YEAR = 60 * 60 * 24 * 7;// 31536000000;
+  // one week actually
+  var ONE_YEAR = 1000 * 60 * 60 * 24 * 7;// 31536000000;
 
   // missing session secret
   if (!options.secretKey) {
