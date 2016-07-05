@@ -8,7 +8,7 @@ module.exports = function (options) {
   var self = this;
 
   // one week actually
-  var ONE_YEAR = 1000 * 60 * 60 * 24 * 7;// 31536000000;
+  var MAX_AGE = 1000 * 60 * 60 * 24 * 365;// 31536000000;
 
   // missing session secret
   if (!options.secretKey) {
@@ -118,7 +118,7 @@ module.exports = function (options) {
     }
     if (json.user) {
       if (req.body.validFor === 'one-year') {
-        req.session.cookie.maxAge = ONE_YEAR;
+        req.session.cookie.maxAge = MAX_AGE;
       }
 
       req.session.user = json.user;
