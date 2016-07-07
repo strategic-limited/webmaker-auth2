@@ -38,11 +38,11 @@ module.exports = function (options) {
   self.cookieName = 'webmakerlogin';
 
   self.getLoginUrl = function getLoginUrl(req) {
-    return req.whitelabel ? req.whitelabel.getLoginUrl() : self.loginURL;
+    return req.whiteLabel ? req.whiteLabel.getLoginUrl() : self.loginURL;
   };
 
   self.getAuthLoginUrl = function getAuthLoginUrl(req) {
-    return req.whitelabel ? req.whitelabel.getLoginUrlWithAuth() : self.authLoginURL;
+    return req.whiteLabel ? req.whiteLabel.getLoginUrlWithAuth() : self.authLoginURL;
   };
 
   self.cookieParser = function () {
@@ -84,8 +84,8 @@ module.exports = function (options) {
       if (req.method.toLowerCase() === 'options') {
         return next();
       } else {
-        // we allow req.whitelabel to override cookieDomain
-        var cookieDomain = req.whitelabel && req.whitelabel.cookieDomain;
+        // we allow req.whiteLabel to override cookieDomain
+        var cookieDomain = req.whiteLabel && req.whiteLabel.cookieDomain;
         if (cookieDomain) {
           var hostSession = whitelabelSessionsCache[cookieDomain];
           if (!hostSession) {
