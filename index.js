@@ -645,7 +645,7 @@ module.exports = function (options) {
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
-        if (resp.statusCode !== 200 &&
+        if (resp.statusCode !== 204 &&
           resp.statusCode !== 400 &&
           resp.statusCode !== 401) {
           if (resp.statusCode === 429) {
