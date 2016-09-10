@@ -592,11 +592,11 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.getAuthLoginUrl(req) + '/api/v2/user/request-reset-code'
+        uri: self.getAuthLoginUrl(req) + '/api/users/forgot'
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
-        if (resp.statusCode !== 200) {
+        if (resp.statusCode !== 204) {
           if (resp.statusCode === 429) {
             res.set({
               'x-ratelimit-limit': resp.headers['x-ratelimit-limit'],
@@ -619,27 +619,19 @@ module.exports = function (options) {
           bytes += c.length;
         });
         resp.on('end', function () {
-          var body = Buffer.concat(bodyParts, bytes).toString('utf8');
-          var json;
-
-          try {
-            json = JSON.parse(body);
-          } catch (ex) {
-            return res.json(500, {
-              error: 'There was an error parsing the response from the server'
-            });
-          }
-
-          res.json(json);
+          res.json({
+            status: 'created'
+          });
         });
       });
       hReq.end(JSON.stringify({
-        uid: req.body.uid
+        email: req.body.uid,
+        baseUrl: req.whiteLabel.getProjectsUrl() + '/me'
       }), 'utf8');
     },
     resetPassword: function (req, res, next) {
       var body = req.body;
-      if (!body.uid || !body.resetCode || !body.newPassword) {
+      if (!body.token || !body.newPassword) {
         return res.json(400, {
           error: 'Missing required parameters'
         });
@@ -649,11 +641,11 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.getAuthLoginUrl(req) + '/api/v2/user/reset-password'
+        uri: self.getAuthLoginUrl(req) + '/api/users/reset/' + body.token
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
-        if (resp.statusCode !== 200 &&
+        if (resp.statusCode !== 204 &&
           resp.statusCode !== 400 &&
           resp.statusCode !== 401) {
           if (resp.statusCode === 429) {
@@ -678,24 +670,12 @@ module.exports = function (options) {
           bytes += c.length;
         });
         resp.on('end', function () {
-          var body = Buffer.concat(bodyParts, bytes).toString('utf8');
-          var json;
-
-          try {
-            json = JSON.parse(body);
-          } catch (ex) {
-            return res.json(500, {
-              error: 'There was an error parsing the response from the server'
-            });
-          }
-
-          res.json(resp.statusCode, json);
+          res.send();
         });
       });
       hReq.end(JSON.stringify({
-        uid: body.uid,
-        resetCode: body.resetCode,
-        newPassword: body.newPassword
+        newPassword: body.newPassword,
+        verifyPassword: body.newPassword
       }), 'utf8');
     },
     removePassword: function (req, res, next) {
