@@ -57,7 +57,7 @@ module.exports = function (options) {
       secret: self.secretKey,
       cookie: {
         expires: false,
-        secure: false
+        secure: self.forceSSL
       },
       proxy: true
     };
