@@ -495,7 +495,7 @@ module.exports = function (options) {
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
-        if (res.statusCode !== 200) {
+        if (res.statusCode === 200) {
           if (resp.statusCode === 404) {
             return res.json({
               tos: false
