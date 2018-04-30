@@ -66,8 +66,6 @@ module.exports = function (options) {
       options.cookie.domain = self.domain;
     }
 
-    var cookieSessionMiddleware = express.cookieSession(options);
-
     var whitelabelSessionsCache = {};
 
     var copyOptionsWithDomain = function (options, cookieDomain) {
@@ -85,16 +83,17 @@ module.exports = function (options) {
         return next();
       } else {
         // we allow req.whiteLabel to override cookieDomain
+        var hostSession;
         var cookieDomain = req.whiteLabel && req.whiteLabel.cookieDomain;
         if (cookieDomain) {
-          var hostSession = whitelabelSessionsCache[cookieDomain];
+          hostSession = whitelabelSessionsCache[cookieDomain];
           if (!hostSession) {
             hostSession = whitelabelSessionsCache[cookieDomain] = express.cookieSession(copyOptionsWithDomain(options, cookieDomain));
           }
-          hostSession(req, res, next);
         } else {
-          cookieSessionMiddleware(req, res, next);
+          hostSession = express.cookieSession(options);
         }
+        hostSession(req, res, next);
       }
     };
 
