@@ -446,7 +446,7 @@ module.exports = function (options) {
         });
       });
       hReq.end(JSON.stringify({
-        uid: req.locals.user.username
+        uid: req.locals.populatedUser.username
       }), 'utf8');
     },
     createUser: function (req, res, next) {
