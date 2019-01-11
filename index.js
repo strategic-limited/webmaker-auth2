@@ -137,10 +137,7 @@ module.exports = function (options) {
 
   function refreshSession(req, res, next) {
     var hReq = hyperquest.get({
-      uri: self.getAuthLoginUrl(req) + '/user/id/' + req.session.user.id,
-      headers: {
-        'wl-domain': req.whiteLabel.domain,
-      }
+      uri: self.getAuthLoginUrl(req) + '/user/id/' + req.session.user.id
     });
     hReq.on('error', next);
     hReq.on('response', function (resp) {
@@ -254,8 +251,7 @@ module.exports = function (options) {
       var hReq = hyperquest.post({
         headers: {
           'Content-Type': 'application/json',
-          'x-ratelimit-ip': getIPAddress(req),
-          'wl-domain': req.whiteLabel.domain,
+          'x-ratelimit-ip': getIPAddress(req)
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/authenticateToken'
       });
@@ -305,8 +301,7 @@ module.exports = function (options) {
     authenticate: function (req, res, next) {
       var hReq = hyperquest.post({
         headers: {
-          'Content-Type': 'application/json',
-          'wl-domain': req.whiteLabel.domain,
+          'Content-Type': 'application/json'
         },
         uri: self.getLoginUrl(req) + '/api/user/authenticate'
       });
@@ -351,8 +346,7 @@ module.exports = function (options) {
       }
       var hReq = hyperquest.post({
         headers: {
-          'Content-Type': 'application/json',
-          'wl-domain': req.whiteLabel.domain
+          'Content-Type': 'application/json'
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/exists'
       });
@@ -411,8 +405,7 @@ module.exports = function (options) {
 
       var hReq = hyperquest.post({
         headers: {
-          'Content-Type': 'application/json',
-          'wl-domain': req.whiteLabel.domain,
+          'Content-Type': 'application/json'
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/exists'
       });
@@ -460,8 +453,7 @@ module.exports = function (options) {
       var hReq = hyperquest.post({
         headers: {
           'Content-Type': 'application/json',
-          'x-ratelimit-ip': getIPAddress(req),
-          'wl-domain': req.whiteLabel.domain,
+          'x-ratelimit-ip': getIPAddress(req)
         },
         uri: self.getLoginUrl(req) + '/api/v2/user/create'
       });
@@ -535,8 +527,7 @@ module.exports = function (options) {
       }
       var hReq = hyperquest.post({
         headers: {
-          'Content-Type': 'application/json',
-          'wl-domain': req.whiteLabel.domain,
+          'Content-Type': 'application/json'
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/tos'
       });
@@ -567,8 +558,7 @@ module.exports = function (options) {
       var hReq = hyperquest.post({
         headers: {
           'Content-Type': 'application/json',
-          'x-ratelimit-ip': getIPAddress(req),
-          'wl-domain': req.whiteLabel.domain,
+          'x-ratelimit-ip': getIPAddress(req)
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/verify-password'
       });
@@ -625,8 +615,7 @@ module.exports = function (options) {
       var hReq = hyperquest.post({
         headers: {
           'Content-Type': 'application/json',
-          'x-ratelimit-ip': getIPAddress(req),
-          'wl-domain': req.whiteLabel.domain,
+          'x-ratelimit-ip': getIPAddress(req)
         },
         uri: self.getAuthLoginUrl(req) + '/api/users/forgot'
       });
@@ -675,8 +664,7 @@ module.exports = function (options) {
       var hReq = hyperquest.post({
         headers: {
           'Content-Type': 'application/json',
-          'x-ratelimit-ip': getIPAddress(req),
-          'wl-domain': req.whiteLabel.domain,
+          'x-ratelimit-ip': getIPAddress(req)
         },
         uri: self.getAuthLoginUrl(req) + '/api/users/reset/' + body.token
       });
@@ -722,8 +710,7 @@ module.exports = function (options) {
 
       var hReq = hyperquest.post({
         headers: {
-          'Content-Type': 'application/json',
-          'wl-domain': req.whiteLabel.domain,
+          'Content-Type': 'application/json'
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/remove-password'
       });
@@ -776,8 +763,7 @@ module.exports = function (options) {
       }
       var hReq = hyperquest.post({
         headers: {
-          'Content-Type': 'application/json',
-          'wl-domain': req.whiteLabel.domain,
+          'Content-Type': 'application/json'
         },
         uri: self.getAuthLoginUrl(req) + '/api/v2/user/enable-passwords'
       });
