@@ -796,7 +796,8 @@ module.exports = function (options) {
       });
       hReq.end(JSON.stringify({
         uid: req.session.user.email,
-        password: body.password
+        password: body.password,
+        currentPassword: body.currentPassword,
       }), 'utf8');
     }
   };
