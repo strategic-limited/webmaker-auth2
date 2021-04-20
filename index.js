@@ -134,8 +134,48 @@ module.exports = function (options) {
       });
     }
   }
+  function getTokens(req, res, callback) {
+    var hReq = hyperquest.post({
+      headers: {
+        'Content-Type': 'application/json',
+        'x-ratelimit-ip': getIPAddress(req),
+    'wl-domain': req.whiteLabel.domain
+      },
+      // todo update it
+      uri: 'https://dev-api.vidcloud.io/api/user-token'
+    });
+    hReq.on('error', function (e) { console.error(e); });
+    hReq.on('response', function (resp) {
+      // todo create func
+      if (resp.statusCode !== 200) {
+        if (resp.statusCode === 429) {
+          res.set({
+            'x-ratelimit-limit': resp.headers['x-ratelimit-limit'],
+            'x-ratelimit-remaining': resp.headers['x-ratelimit-remaining'],
+            'retry-after': resp.headers['retry-after']
+          });
+          return res.json(resp.statusCode, {
+            error: 'Request Limit Exceeded'
+          });
+        }
+        return res.json(401, {
+          status: 'unauthorized'
+        });
+      }
+      resp.on('end', function () {
+        return callback();
+      });
+    });
+    console.info(JSON.stringify(req.body));
+    hReq.end(JSON.stringify({
+      password: req.body.password,
+      uid: req.body.uid,
+      user: req.body.user
+    }), 'utf8');
+  }
 
   function refreshSession(req, res, next) {
+    // todo update it, only jwt
     var hReq = hyperquest.get({
       uri: self.getAuthLoginUrl(req) + '/user/id/' + req.session.user.id
     });
@@ -560,7 +600,8 @@ module.exports = function (options) {
           'Content-Type': 'application/json',
           'x-ratelimit-ip': getIPAddress(req)
         },
-        uri: self.getAuthLoginUrl(req) + '/api/v2/user/verify-password'
+        uri: self.getAuthLoginUrl(req) + '/api/v2/user/verify-password',
+        credentials: 'include',
       });
       hReq.on('error', next);
       hReq.on('response', function (resp) {
@@ -596,7 +637,9 @@ module.exports = function (options) {
             return authenticateCallback(ex, req, res);
           }
 
-          authenticateCallback(null, req, res, json);
+          return getTokens(req, res,function () {
+            authenticateCallback(null, req, res, json);
+          });
         });
       });
 
