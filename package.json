@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mozilla/webmaker-auth.git"
+    "url": "https://github.com/mozilla/webmaker-auth2.git"
   },
   "author": {
     "name": "Webmaker Product Team",
