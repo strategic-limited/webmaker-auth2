@@ -403,51 +403,11 @@ module.exports = function (options) {
         return refreshSession(req, res, next);
       }
 
-      var hReq = hyperquest.post({
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        uri: self.getAuthLoginUrl(req) + '/api/v2/user/exists'
+      res.json({
+        status: 'Valid Session user get details',
+        user: req.session.user,
+        email: req.session.email
       });
-      hReq.on('error', next);
-      hReq.on('response', function (resp) {
-        if (resp.statusCode !== 200) {
-          if (resp.statusCode === 404) {
-            return res.json({
-              status: 'No Sessions'
-            });
-          }
-          return res.json(resp.statusCode || 500, {
-            status: 'There was an error on the login server'
-          });
-        }
-        var bodyParts = [];
-        var bytes = 0;
-        resp.on('data', function (c) {
-          bodyParts.push(c);
-          bytes += c.length;
-        });
-        resp.on('end', function () {
-          var body = Buffer.concat(bodyParts, bytes).toString('utf8');
-
-          try {
-            var userJson = JSON.parse(body);
-
-            res.json({
-              status: 'Valid Session user get details',
-              user: userJson.user,
-              email: req.session.email
-            });
-          } catch (ex) {
-            return res.json(500, {
-              status: 'invalid response from login server'
-            });
-          }
-        });
-      });
-      hReq.end(JSON.stringify({
-        uid: req.locals.populatedUser.username
-      }), 'utf8');
     },
     createUser: function (req, res, next) {
       var hReq = hyperquest.post({
