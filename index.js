@@ -651,7 +651,7 @@ module.exports = function (options) {
       });
       hReq.end(JSON.stringify({
         email: req.body.uid,
-        baseUrl: req.whiteLabel.getProjectsUrl() + '/me'
+        baseUrl: req.whiteLabel.getProjectsUrl() + '/reset-pass'
       }), 'utf8');
     },
     resetPassword: function (req, res, next) {
