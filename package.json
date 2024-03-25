@@ -16,7 +16,7 @@
   },
   "license": "MPLv2",
   "dependencies": {
-    "express": "3.4.5",
+    "express": "4.19.2",
     "hyperquest": "~0.2.0"
   },
   "devDependencies": {
